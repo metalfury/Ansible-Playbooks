@@ -1,0 +1,27 @@
+---
+- name: Configure servers for sssd authentication
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install necessary packages
+      package:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - sssd
+        - realmd
+        - oddjob
+        - oddjob-mkhomedir
+        - sssd-tools
+
+    - name: Configure sssd
+      template:
+        src: "sssd.conf.j2"
+        dest: "/etc/sssd/sssd.conf"
+      notify: restart sssd
+
+  handlers:
+    - name: restart sssd
+      service:
+        name: sssd
+        state: restarted
