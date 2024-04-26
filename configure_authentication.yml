@@ -1,0 +1,45 @@
+---
+- name: Configure authentication using sssd - ubuntu, centos
+  hosts: ubuntu, centos
+  become: yes
+  tasks:
+    - name: Install required packages
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - sssd
+        - realmd
+        - oddjob
+        - oddjob-mkhomedir
+        - sssd-tools
+        - adcli
+
+- name: Configure authentication using sssd - debian
+  hosts: debian
+  become: yes
+  become_user: su
+  tasks:
+    - name: Install required packages
+      package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - sssd
+        - realmd
+        - oddjob
+        - oddjob-mkhomedir
+        - sssd-tools
+        - adcli
+
+    - name: Configure sssd for siber2.local domain
+      template:
+        src: sssd.conf.j2
+        dest: /etc/sssd/sssd.conf
+      notify: restart sssd
+
+  handlers:
+    - name: restart sssd
+      service:
+        name: sssd
+        state: restarted
