@@ -38,6 +38,11 @@
         dest: /etc/sssd/sssd.conf
       notify: restart sssd
 
+    - name: Set permissions for sssd.conf
+      file:
+        path: /etc/sssd/sssd.conf
+        mode: "0600"
+
   handlers:
     - name: restart sssd
       service:
