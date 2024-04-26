@@ -1,5 +1,5 @@
 ---
-- name: Configure authentication using sssd - ubuntu, centos
+- name: Configure authentication using sssd - ubuntu, centos, debian
   hosts: all
   become: yes
   tasks:
